@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Recipe from "./Recipe";
+import MyImg from './not_found.jpg'
 import "./App.css";
 
 function App() {
@@ -8,40 +9,72 @@ function App() {
 
   const [recipes, setRecipes] = useState([]);
   const [search, setSearch] = useState("");
+  const [error, setError] = useState(false);
   const [query, setQuery] = useState("chicken");
 
   const exampleReq = `https://api.edamam.com/search?q=${query}&app_id=${APP_ID}&app_key=${APP_KEY}`;
 
   useEffect(() => {
     getRecipes();
-    console.log(getRecipes());
   }, [query]);
 
   const getRecipes = async () => {
     const response = await fetch(exampleReq);
     const data = await response.json();
     setRecipes(data.hits);
-    console.log(data);
   };
 
   const updateSearch = (e) => {
-    setSearch(e.target.value);
+    setSearch(e.target.value.trim());
   };
 
   const getSearch = (e) => {
     e.preventDefault();
-    setQuery(search);
-    setSearch("");
+    try {
+      setQuery(search);
+      setSearch("");
+    } catch (err) {
+      setError(true);
+      console.log("meal not found", err);
+    }
   };
+
+  if (error || query === "") {
+    return (
+      <div className="App">
+        <h2>let's cook</h2>
+        <form className="search-form" onSubmit={getSearch}>
+          <input
+            className={`${error ? "error" : "search-bar"}`}
+            // className="search-bar"
+            type="text"
+            value={search}
+            onChange={updateSearch}
+            placeholder="chicken"
+          />
+          <button className="search-button" type="submit">
+            Search
+          </button>
+        </form>
+        <div className="not-found">
+          <p>please try again 😞</p>
+          <img src={MyImg} alt='not faound'/>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="App">
+      <h2>let's cook</h2>
       <form className="search-form" onSubmit={getSearch}>
         <input
-          className="search-bar"
+          className={`${error ? "error" : "search-bar"}`}
+          
           type="text"
           value={search}
           onChange={updateSearch}
+          placeholder="chicken"
         />
         <button className="search-button" type="submit">
           Search

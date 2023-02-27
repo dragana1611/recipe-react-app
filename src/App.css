@@ -1,3 +1,6 @@
+@import url("https://fonts.googleapis.com/css2?family=Tangerine:wght@700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Merienda+One&display=swap");
+
 * {
   margin: 0;
   padding: 0;
@@ -23,6 +26,19 @@
   );
 }
 
+h2 {
+  font-family: "Tangerine", cursive;
+  font-size: 5rem;
+  font-weight: 700;
+  text-transform: capitalize;
+  text-align: center;
+  padding: 25px 0;
+}
+
+input.error {
+  border: 2px solid rgb(234, 63, 60);
+}
+
 .search-form {
   min-height: 10vh;
   display: flex;
@@ -33,6 +49,7 @@
 .search-bar {
   width: 50%;
   border: none;
+  border: 2px solid rgb(211, 97, 211);
   padding: 10px;
 }
 
@@ -43,8 +60,30 @@
   color: white;
 }
 
+.search-button:hover,
+.search-button:active {
+  background: #7a2a71;
+  cursor: pointer;
+}
+
 .recipes {
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;
+}
+
+.not-found {
+  width: 50%;
+  min-width: 30%;
+  margin: 30px auto;
+  font-family: "Merienda One", cursive;
+  font-size: 1.5rem;
+  font-weight: 400;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+img {
+  width: 50%;
+  margin-top: 30px;
 }
