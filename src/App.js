@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Recipe from "./Recipe";
-import MyImg from './not_found.jpg'
+import MyImg from "./not_found.jpg";
 import "./App.css";
 
 function App() {
@@ -20,6 +20,9 @@ function App() {
 
   const getRecipes = async () => {
     const response = await fetch(exampleReq);
+    if (!response.ok) {
+      throw new Error("Something went wrong!");
+    }
     const data = await response.json();
     setRecipes(data.hits);
   };
@@ -33,35 +36,38 @@ function App() {
     try {
       setQuery(search);
       setSearch("");
-    } catch (err) {
+    } catch (error) {
       setError(true);
-      console.log("meal not found", err);
     }
   };
 
-  if (error || query === "") {
-    return (
-      <div className="App">
-        <h2>let's cook</h2>
-        <form className="search-form" onSubmit={getSearch}>
-          <input
-            className={`${error ? "error" : "search-bar"}`}
-            // className="search-bar"
-            type="text"
-            value={search}
-            onChange={updateSearch}
-            placeholder="chicken"
-          />
-          <button className="search-button" type="submit">
-            Search
-          </button>
-        </form>
-        <div className="not-found">
-          <p>please try again 😞</p>
-          <img src={MyImg} alt='not faound'/>
-        </div>
+  let content;
+
+  content = (
+    <div className="recipes">
+      {recipes.map((recipe) => (
+        <Recipe
+          key={recipe.recipe.label}
+          title={recipe.recipe.label}
+          calories={recipe.recipe.calories}
+          image={recipe.recipe.image}
+          ingredients={recipe.recipe.ingredients}
+        />
+      ))}
+    </div>
+  );
+
+  if (recipes.length === 0) {
+    content = (
+      <div className="not-found">
+        <p>please try again 😞</p>
+        <img src={MyImg} alt="not faound" />
       </div>
     );
+  }
+
+  if (error) {
+    content = <p>{error}</p>;
   }
 
   return (
@@ -70,7 +76,6 @@ function App() {
       <form className="search-form" onSubmit={getSearch}>
         <input
           className={`${error ? "error" : "search-bar"}`}
-          
           type="text"
           value={search}
           onChange={updateSearch}
@@ -80,17 +85,7 @@ function App() {
           Search
         </button>
       </form>
-      <div className="recipes">
-        {recipes.map((recipe) => (
-          <Recipe
-            key={recipe.recipe.label}
-            title={recipe.recipe.label}
-            calories={recipe.recipe.calories}
-            image={recipe.recipe.image}
-            ingredients={recipe.recipe.ingredients}
-          />
-        ))}
-      </div>
+      {content}
     </div>
   );
 }
